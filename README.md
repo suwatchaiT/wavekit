@@ -1,100 +1,80 @@
-# vinext-starter
+# WaveKit
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+WaveKit is a browser-based engineering toolbox for GSM, LTE, NR, Wi-Fi, antenna, RF-planning and IP-network calculations.
 
-## Prerequisites
+WaveKit Beta 0.1 currently includes 35 focused tools. Calculations run locally in the browser, and calculator inputs can be preserved in shareable URLs.
 
-- Node.js `>=22.13.0`
+## Important notice
 
-## Quick Start
+WaveKit is reference software for education, planning estimates and independent cross-checks. It is not a calibrated instrument, certified design system, compliance certificate or operational guarantee.
+
+Do not use its output as the sole basis for safety decisions, regulatory compliance, commissioning, contractual claims, purchasing or network changes. Verify material results against current standards, vendor documentation, calibrated tools and applicable local requirements.
+
+## Tool categories
+
+- RF Planning: propagation loss, link budgets, Fresnel clearance, thermal noise, EIRP and power conversion.
+- Cellular: GSM/LTE/NR channel conversion, resource blocks, LTE/NR grids and peak-throughput estimates.
+- Antenna: coverage geometry, patterns, beamforming, aperture, dish design, field boundaries, polarization, MIMO spacing, PIM and feeder loss.
+- Wi-Fi: channel references and airtime estimates.
+- IP Calculator: IPv4/IPv6 subnetting, VLSM, CIDR splitting, ranges, masks, address conversion, MTU/MSS, DHCP and overlap checks.
+
+Each tool displays its technical basis, represented model or standard, applicable range, assumptions, review date and standards-based or planning-estimate status.
+
+## Local development
+
+Requirements: Node.js 22.13 or newer.
 
 ```bash
 npm install
 npm run dev
+```
+
+Then open `http://localhost:3000`.
+
+## Verification
+
+```bash
+npm run lint
+npm test
+```
+
+`npm test` creates the production vinext build and runs server-rendering smoke tests.
+
+## Architecture
+
+- Next-compatible application structure under `app/`
+- React calculator components with local browser state
+- vinext and the Cloudflare Vite plugin
+- Cloudflare Worker entry point under `worker/`
+- No database, account or server-side calculation service in Beta 0.1
+
+## Deployment
+
+The current build targets Cloudflare Workers. Create the production build with:
+
+```bash
 npm run build
 ```
 
-This starter does not use `wrangler.jsonc`.
+Use a Cloudflare preview or `workers.dev` hostname before attaching a production custom domain. See the official [Cloudflare Workers static-assets guide](https://developers.cloudflare.com/workers/static-assets/get-started/) and [custom-domain guide](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/).
 
-## Included Shape
+## Reporting problems
 
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+Open a GitHub issue and include:
 
-## Workspace Auth Headers
+- Tool name and shareable URL
+- Actual result and expected result
+- Standard, reference or independent calculation used for comparison
+- Browser and operating system
 
-Signed-in visitors receive both `oai-authenticated-user-id` and `oai-authenticated-user-email`. Private Sites require every visitor to sign in; public Sites may also have anonymous visitors, for whom neither header is present.
+Do not include confidential network, customer or location data.
 
-The user ID is stable for the same user on the same Site and different across Sites. Email and name are intended for display or contact purposes.
+Security concerns should follow [SECURITY.md](SECURITY.md).
 
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
+## Contributing
 
-Treat the full name as optional and fall back to email when it is absent:
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before proposing a calculator or formula change. Technical changes should include sources, assumptions, range limits and representative verification cases.
 
-```tsx
-import { headers } from "next/headers";
+## License
 
-export default async function Home() {
-  const requestHeaders = await headers();
-  const userId = requestHeaders.get("oai-authenticated-user-id");
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
-```
-
-## Optional Dispatch-Owned ChatGPT Sign-In
-
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
-
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
-
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
-
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
-
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
-
-## Useful Commands
-
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
-
-## Learn More
-
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+WaveKit is available under the [MIT License](LICENSE). Standards documents and external references remain subject to their respective owners and licenses.

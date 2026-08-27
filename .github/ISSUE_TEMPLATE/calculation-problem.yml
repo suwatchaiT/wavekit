@@ -1,0 +1,36 @@
+name: Calculation problem
+description: Report a suspected formula, input, range or result issue.
+title: "[Calculation]: "
+labels: ["calculation-review"]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include confidential network, customer or location data.
+  - type: input
+    id: tool
+    attributes:
+      label: Tool
+      placeholder: Link Budget
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Shareable WaveKit URL
+      description: Remove any sensitive values before sharing.
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result and independent reference
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and operating system
