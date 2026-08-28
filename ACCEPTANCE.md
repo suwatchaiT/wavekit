@@ -23,5 +23,4 @@ Safari and Firefox were not available in this acceptance environment and remain 
 
 Source rollback passed. Release commit `ac956af` (the commit used for GitHub release `v0.1.0`) was checked out into an isolated detached worktree, then built and tested successfully. The temporary worktree was removed without changing `main`.
 
-Hosted rollback remains pending until WaveKit has a live Cloudflare deployment with a prior deployment to restore. After deployment, rehearse rollback by redeploying the previous known-good build, smoke-testing the public URL, then redeploying the current release.
-
+Hosted rollback passed. The owner-only Sites project first deployed the current release, then deployed the saved known-good `ac956af` version, and finally restored the current release. All three production deployment states completed successfully. An unauthenticated browser correctly reached the private ChatGPT sign-in gate; authenticated content smoke testing remains an owner-session check.
