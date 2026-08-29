@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable @next/next/no-html-link-for-pages -- Native navigation is intentional: the deployed vinext Link runtime currently intercepts clicks and fails before navigation. */
 
 import { useEffect, useState } from "react";
 import { categories, toolCatalog } from "./tool-data";
