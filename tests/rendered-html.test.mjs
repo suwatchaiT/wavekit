@@ -10,6 +10,8 @@ async function render(path="/") {
 
 test("renders the WaveKit catalog with the live tool count",async()=>{const response=await render();assert.equal(response.status,200);const html=await response.text();assert.match(html,/Wave<span>Kit/);assert.match(html,/>35<\/b><span>Engineering tools/);assert.match(html,/Search all/);assert.doesNotMatch(html,/QUICK CALCULATOR/);assert.match(html,/BETA 0\.1/)});
 
+test("homepage navigation uses working routes and highlights the 3GPP map",async()=>{const response=await render();assert.equal(response.status,200);const html=await response.text();assert.match(html,/aria-label="Primary navigation"/);assert.match(html,/href="\/#tools"/);assert.match(html,/href="\/#reference"/);assert.match(html,/href="\/3gpp"[^>]*>Explore 3GPP map/);assert.doesNotMatch(html,/Tools⌄/)});
+
 test("renders a tool with controls, technical scope and disclaimer",async()=>{const response=await render("/tools/free-space-path-loss");assert.equal(response.status,200);const html=await response.text();assert.match(html,/Free-Space Path Loss/);assert.match(html,/Copy share link/);assert.match(html,/TECHNICAL BASIS/);assert.match(html,/ITU-R P\.525/);assert.match(html,/Reference-only disclaimer/)});
 
 test("renders public information pages",async()=>{for(const slug of ["about","methodology","readiness","privacy","disclaimer"]){const response=await render(`/info/${slug}`);assert.equal(response.status,200);const html=await response.text();assert.match(html,/WaveKit/);assert.match(html,/BETA 0\.1/)}});
